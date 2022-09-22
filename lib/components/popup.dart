@@ -3,16 +3,14 @@ import 'package:website_wireframe/components/form.dart';
 import 'package:website_wireframe/models/servicemodel.dart';
 
 import '../constant.dart';
-import '../models/usermodel.dart';
+import '../models/bookingmodel.dart';
 
 class AptPopUp extends StatelessWidget {
   final ServiceData service;
-  final MyUserData user;
 
   const AptPopUp({
     Key? key,
     required this.service,
-    required this.user,
   }) : super(key: key);
 
   @override
@@ -55,7 +53,8 @@ class AptPopUp extends StatelessWidget {
                   Icons.local_post_office,
                   color: Theme.of(context).primaryColorDark,
                 ),
-              )
+              ),
+              const Spacer(),
             ],
           ),
         ],
@@ -65,7 +64,10 @@ class AptPopUp extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text("Close"),
+          child: const Text(
+            "Close",
+            style: kTitleTextStyle,
+          ),
         ),
       ],
     );
@@ -73,11 +75,11 @@ class AptPopUp extends StatelessWidget {
 }
 
 class FormPopUp extends StatelessWidget {
-  const FormPopUp({Key? key, required this.service, required this.user})
+  const FormPopUp({Key? key, required this.service, required this.uid})
       : super(key: key);
 
   final ServiceData service;
-  final MyUserData user;
+  final String uid;
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +93,7 @@ class FormPopUp extends StatelessWidget {
       content: Form(
         child: Column(
           children: [
-            BookingForm(user: user, service: service),
+            BookingForm(uid: uid, service: service),
           ],
         ),
       ),
@@ -100,9 +102,53 @@ class FormPopUp extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text("Close"),
+          child: const Text(
+            "Close",
+            style: kTitleTextStyle,
+          ),
         ),
       ],
     );
   }
 }
+
+
+class EditFormPopUp extends StatelessWidget {
+  const EditFormPopUp({Key? key, required this.booking, required this.uid})
+      : super(key: key);
+
+  final BookingData booking;
+  final String uid;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Center(
+        child: (Text(
+          "Book an Appointment",
+          style: kTitleTextStyle,
+        )),
+      ),
+      content: Form(
+        child: Column(
+          children: [
+            EditBookingForm(uid: uid, booking: booking),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text(
+            "Close",
+            style: kTitleTextStyle,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+

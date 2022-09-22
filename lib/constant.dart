@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 ///Text styles
+///
+const kTitleCardTextStyle=TextStyle(fontSize: 30, fontWeight: FontWeight.w800);
+
 const kHeadingTextStyle = TextStyle(
   fontSize: 22.0,
   fontWeight: FontWeight.w700,

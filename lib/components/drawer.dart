@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../constant.dart';
+import '../services/auth.dart';
 
-class NavDrawer extends StatelessWidget {
+class NavDrawer extends StatefulWidget {
   const NavDrawer({Key? key}) : super(key: key);
+
+  @override
+  State<NavDrawer> createState() => _NavDrawerState();
+}
+
+class _NavDrawerState extends State<NavDrawer> {
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +43,10 @@ class NavDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(
-              Icons.dynamic_form,
+              Icons.local_hospital,
             ),
             title: const Text(
-              'Form',
+              'Appointments',
               style: kTitleTextStyle,
             ),
             onTap: () {
@@ -56,13 +64,16 @@ class NavDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.phone),
+            leading: const Icon(Icons.lock),
             title: const Text(
-              'Contact',
+              'Log Out',
               style: kTitleTextStyle,
             ),
-            onTap: () {
-              Navigator.pushNamed(context, '/auth');
+            onTap: () async {
+              await _auth.signOut();
+
+              if (!mounted) return;
+              Navigator.pushNamed(context, '/');
             },
           ),
         ],

@@ -59,7 +59,7 @@ class StaticHeader extends StatelessWidget {
       child: Center(
         child: Text(
           title,
-          style: kHeadingTextStyle,
+          style: kTitleCardTextStyle,
         ),
       ),
     );

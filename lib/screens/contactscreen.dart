@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:website_wireframe/components/card.dart';
 
 import '../components/buttons.dart';
 import '../components/drawer.dart';
+import '../components/form.dart';
 import '../components/header.dart';
 import '../constant.dart';
+import '../models/usermodel.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({Key? key}) : super(key: key);
@@ -14,9 +17,16 @@ class ContactScreen extends StatefulWidget {
 }
 
 class _ContactScreenState extends State<ContactScreen> {
-  late GoogleMapController mapController;
+  MyUserData user = MyUserData(
+    uid: "111",
+    name: "Beatrix",
+    email: "b@mail.com",
+    number: "1234567",
+  );
 
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+  late GoogleMapController mapController;
+  final LatLng _center = const LatLng(3.0798, 101.593633253);
+  final Set<Marker> markers = {};
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -52,8 +62,10 @@ class _ContactScreenState extends State<ContactScreen> {
                       onMapCreated: _onMapCreated,
                       initialCameraPosition: CameraPosition(
                         target: _center,
-                        zoom: 11.0,
+                        zoom: 18.0,
                       ),
+                      myLocationEnabled: true,
+                      markers: getmarkers(),
                     ),
                   ),
                   //const Spacer(),
@@ -62,15 +74,22 @@ class _ContactScreenState extends State<ContactScreen> {
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
                       children: const [
-                        Text("Address:", style: kTitleTextStyle),
+                        Text("Address:", style: kHeadingTextStyle),
                         Text(
-                          "Lorem Ipsum \n Lorem Ipsum \n Lorem Ipsum \n Lorem Ipsum \n Lorem Ipsum\n Lorem Ipsum \n Lorem Ipsum",
-                          style: kSubTextStyle,
+                          "No. 1, Jalan SS12/1A,\n Ss 12, 47500\n Subang Jaya,\n Selangor",
+                          style: kTitleTextStyle,
                         ),
                       ],
                     ),
                   ),
                 ],
+              ),
+
+              //Contact Form
+              const TitleCard(title: "Submit Your Enquiries Here!"),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 0.0),
+                child: ContactForm(user: user),
               ),
 
 //url launcher
@@ -118,5 +137,26 @@ class _ContactScreenState extends State<ContactScreen> {
 
           ),
     );
+  }
+
+  Set<Marker> getmarkers() {
+    //markers to place on map
+    setState(() {
+      markers.add(Marker(
+        //add first marker
+        markerId: MarkerId(_center.toString()),
+        position: _center, //position of marker
+        infoWindow: const InfoWindow(
+          //popup info
+          title: 'We Are Here!',
+          snippet: 'Subang Jaya Medical Centre',
+        ),
+        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+      ));
+
+      //add more markers here
+    });
+
+    return markers;
   }
 }

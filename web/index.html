@@ -40,6 +40,8 @@
     <!-- This script adds the flutter initialization JS code -->
     <script src="flutter.js" defer></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDKOqDy0iFRnmd63kXupYdJPGCJsyvFrUE"></script>
+
+
 </head>
 
 <body>
@@ -56,6 +58,10 @@
                 return appRunner.runApp();
             });
         });
+    </script>
+    <script type="module">
+        const firebaseConfig= { apiKey: "AIzaSyBvH-PGFYcsTgY_hcHth95cLnOfK-zNUGE", authDomain: "iwd-project-3aad9.firebaseapp.com", projectId: "iwd-project-3aad9", storageBucket: "iwd-project-3aad9.appspot.com", messagingSenderId: "504172434544", appId: "1:504172434544:web:5e413b0db57a21f5fad0b5",
+        measurementId: "G-8QVN5C5QZT" }; // Initialize Firebase const app = initializeApp(firebaseConfig); const analytics = getAnalytics(app);
     </script>
 </body>
 

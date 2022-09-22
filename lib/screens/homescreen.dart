@@ -1,15 +1,25 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:website_wireframe/components/card.dart';
 import 'package:website_wireframe/components/drawer.dart';
 import 'package:website_wireframe/constant.dart';
 
 import '../components/buttons.dart';
+import '../listbuilders/service_list.dart';
+import '../models/servicemodel.dart';
+import '../services/database.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final User? user = auth.currentUser;
+    final uid = user!.uid;
+
     final List<String> imgList = [
       'assets/cover1.jpeg',
       'assets/cover2.jpeg',
@@ -17,9 +27,9 @@ class HomeScreen extends StatelessWidget {
     ];
 
     final List<String> imgTitle = [
-      'Text Remark 1',
-      'Text Remark 2',
-      'Text Remark 3'
+      'Welcome Back!',
+      'Make Doctor Bookings',
+      'Check Appointment Histories'
     ];
 
     final List<Widget> imageSliders = imgList
@@ -33,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                 Center(
                   child: Text(
                     imgTitle[imgList.indexOf(item)],
-                    style: kHeadingTextStyle,
+                    style: kTitleCardTextStyle,
                   ),
                 ),
               ],
@@ -41,34 +51,47 @@ class HomeScreen extends StatelessWidget {
         .toList();
 
     final controller = ScrollController();
-    return Scaffold(
-      drawer: const NavDrawer(),
-      appBar: AppBar(
-        elevation: 0.0,
-        actions: const [ChangeThemeButton()],
-        backgroundColor: Colors.transparent,
-      ),
-      body: SingleChildScrollView(
-        controller: controller,
-        child: Column(
-          children: [
-            CarouselSlider(
-              options: CarouselOptions(
-                height: MediaQuery.of(context).size.height * 0.4,
-                autoPlay: true,
-                //aspectRatio: 1.0,
-                enlargeCenterPage: true,
-              ),
-              items: imageSliders,
+    return MultiProvider(
+        providers: [
+          StreamProvider<List<ServiceData>>.value(
+              value: ServiceDatabase("").service, initialData: const []),
+        ],
+        builder: (context, snapshot) {
+          return Scaffold(
+            drawer: const NavDrawer(),
+            appBar: AppBar(
+              elevation: 0.0,
+              actions: const [ChangeThemeButton()],
+              backgroundColor: Colors.transparent,
             ),
+            body: SingleChildScrollView(
+              controller: controller,
+              child: Column(
+                children: [
+                  CarouselSlider(
+                    options: CarouselOptions(
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      autoPlay: true,
+                      //aspectRatio: 1.0,
+                      enlargeCenterPage: true,
+                    ),
+                    items: imageSliders,
+                  ),
 
-            //Big Card navigation List
-            //About Us Column
-            //Categorical Service List
-            //Footer
-          ],
-        ),
-      ),
-    );
+                  space,
+                  const TitleBtnCard(),
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.28,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      child: ServiceList(uid: uid)),
+                  //Big Card navigation List
+                  //About Us Column
+                  //Categorical Service List
+                  //Footer
+                ],
+              ),
+            ),
+          );
+        });
   }
 }

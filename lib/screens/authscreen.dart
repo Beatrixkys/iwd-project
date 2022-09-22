@@ -3,6 +3,7 @@ import 'package:website_wireframe/components/loading.dart';
 
 import '../components/text_field.dart';
 import '../constant.dart';
+import '../services/auth.dart';
 import '../services/validator.dart';
 
 //build the personas choice
@@ -20,78 +21,6 @@ import '../services/validator.dart';
 3. add Database 
 
 */
-
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key}) : super(key: key);
-
-  @override
-  State<AuthScreen> createState() => _AuthScreenState();
-}
-
-class _AuthScreenState extends State<AuthScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      child: Container(
-        margin: const EdgeInsets.all(80),
-        padding: const EdgeInsets.all(80),
-        width: MediaQuery.of(context).size.width * 0.6,
-        height: MediaQuery.of(context).size.height * 0.1,
-        child: Container(
-          padding: const EdgeInsets.all(30),
-          width: MediaQuery.of(context).size.width * 0.6,
-          height: MediaQuery.of(context).size.height * 0.2,
-          color: Theme.of(context).colorScheme.secondary,
-          child: Column(
-            children: [
-              Icon(
-                Icons.local_hospital,
-                size: MediaQuery.of(context).size.height * 0.1,
-              ),
-              Text(
-                "Select a Role",
-                style: TextStyle(
-                  fontSize: 40,
-                  decoration: TextDecoration.none,
-                  color: Theme.of(context).primaryColorDark,
-                ),
-              ),
-              space,
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.6,
-                height: MediaQuery.of(context).size.height * 0.05,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/signin");
-                  },
-                  style: kButtonStyle,
-                  child: const Text(
-                    'Role 1',
-                    style: kButtonTextStyle,
-                  ),
-                ),
-              ),
-              space,
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.6,
-                height: MediaQuery.of(context).size.height * 0.05,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: kButtonStyle,
-                  child: const Text(
-                    'Role 2',
-                    style: kButtonTextStyle,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class RegisterLoginScreen extends StatefulWidget {
   const RegisterLoginScreen({Key? key}) : super(key: key);
 
@@ -100,6 +29,7 @@ class RegisterLoginScreen extends StatefulWidget {
 }
 
 class _RegisterLoginScreenState extends State<RegisterLoginScreen> {
+  final AuthService _auth = AuthService();
   String email = "";
   String password = "";
   String name = "";
@@ -144,11 +74,11 @@ class _RegisterLoginScreenState extends State<RegisterLoginScreen> {
             child: Container(
               margin: const EdgeInsets.all(80),
               padding: const EdgeInsets.all(80),
-              width: MediaQuery.of(context).size.width * 0.6,
+              width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height * 0.1,
               child: Container(
                 padding: const EdgeInsets.all(30),
-                width: MediaQuery.of(context).size.width * 0.6,
+                width: MediaQuery.of(context).size.width * 0.7,
                 height: MediaQuery.of(context).size.height * 0.2,
                 color: Theme.of(context).colorScheme.secondary,
                 child: Column(
@@ -158,7 +88,7 @@ class _RegisterLoginScreenState extends State<RegisterLoginScreen> {
                       size: MediaQuery.of(context).size.height * 0.1,
                     ),
                     Text(
-                      showSignIn ? "Sign In" : "Register",
+                      showSignIn ? "Register" : "Login",
                       style: TextStyle(
                         fontSize: 40,
                         decoration: TextDecoration.none,
@@ -222,8 +152,34 @@ class _RegisterLoginScreenState extends State<RegisterLoginScreen> {
                                 height:
                                     MediaQuery.of(context).size.height * 0.04,
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {}
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      setState(() => loading = true);
+                                      var password =
+                                          passwordController.value.text;
+                                      var email = emailController.value.text;
+                                      var name = nameController.value.text;
+                                      var number = numberController.value.text;
+
+                                      dynamic result = showSignIn
+                                          ? await _auth
+                                              .signInWithEmailAndPassword(
+                                                  email, password, context)
+                                          : await _auth.register(email,
+                                              password, name, number, context);
+
+                                      if (result == null) {
+                                        setState(() {
+                                          loading = false;
+                                          var error =
+                                              "Please supply valid email";
+                                          //TODO! Show POP UP ERROR
+                                        });
+                                      }
+
+                                      if (!mounted) return;
+                                      Navigator.pushNamed(context, '/home');
+                                    }
                                   },
                                   style: kButtonStyle,
                                   child: const Text(
