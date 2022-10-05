@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/bookingmodel.dart';
 import '../models/servicemodel.dart';
+import '../models/usermodel.dart';
 
 class DatabaseService {
   final String uid;
@@ -12,6 +13,8 @@ class DatabaseService {
   final CollectionReference<Map<String, dynamic>> bookingCollection =
       FirebaseFirestore.instance.collection("booking");
 
+  final CollectionReference<Map<String, dynamic>> enquiryCollection =
+      FirebaseFirestore.instance.collection("enquiry");
   Future<void> saveUser(String name, String email, String number) async {
     return await userCollection
         .doc(uid)
@@ -74,6 +77,40 @@ class DatabaseService {
         .update({
       'report': report,
     });
+  }
+
+  Future<void> addEnquiry(
+      String ename, String eemail, String enumber, String enquiry) async {
+    //doc will create a new uid of Database service
+    return await enquiryCollection.doc(uid).set({
+      'enquiries': FieldValue.arrayUnion([
+        {
+          'ename': ename,
+          'eemail': eemail,
+          'enumber': enumber,
+          'enquiry': enquiry,
+        }
+      ])
+    }, SetOptions(merge: true));
+  }
+
+  MyUserData _userFromSnapshot(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    var data = snapshot.data();
+    if (data == null) throw Exception("user not found");
+    return MyUserData(
+      uid: snapshot.id,
+      name: data['name'],
+      email: data['email'],
+      number: data['number'],
+    );
+  }
+
+//Create a SINGLE user stream
+  //stream qui récupre le user courant donc
+  // besoin de doc(uid)
+  Stream<MyUserData> get user {
+    return userCollection.doc(uid).snapshots().map(_userFromSnapshot);
   }
 
   List<BookingData> _bookingListFromSnapshot(QuerySnapshot snapshot) {

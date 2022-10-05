@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:website_wireframe/components/card.dart';
@@ -7,7 +8,6 @@ import '../components/drawer.dart';
 import '../components/form.dart';
 import '../components/header.dart';
 import '../constant.dart';
-import '../models/usermodel.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({Key? key}) : super(key: key);
@@ -17,12 +17,7 @@ class ContactScreen extends StatefulWidget {
 }
 
 class _ContactScreenState extends State<ContactScreen> {
-  MyUserData user = MyUserData(
-    uid: "111",
-    name: "Beatrix",
-    email: "b@mail.com",
-    number: "1234567",
-  );
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   late GoogleMapController mapController;
   final LatLng _center = const LatLng(3.0798, 101.593633253);
@@ -34,6 +29,7 @@ class _ContactScreenState extends State<ContactScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final User? user = auth.currentUser;
     final controller = ScrollController();
     return Scaffold(
       drawer: const NavDrawer(),
@@ -89,7 +85,7 @@ class _ContactScreenState extends State<ContactScreen> {
               const TitleCard(title: "Submit Your Enquiries Here!"),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 50.0, 0.0, 0.0),
-                child: ContactForm(user: user),
+                child: ContactForm(uid: user!.uid),
               ),
 
 //url launcher

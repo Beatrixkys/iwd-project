@@ -72,14 +72,14 @@ class _RegisterLoginScreenState extends State<RegisterLoginScreen> {
         ? const Loading()
         : Material(
             child: Container(
-              margin: const EdgeInsets.all(80),
-              padding: const EdgeInsets.all(80),
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.1,
+              margin: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.6,
               child: Container(
-                padding: const EdgeInsets.all(30),
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: MediaQuery.of(context).size.height * 0.2,
+                padding: const EdgeInsets.all(5),
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.5,
                 color: Theme.of(context).colorScheme.secondary,
                 child: Column(
                   children: [
@@ -98,7 +98,7 @@ class _RegisterLoginScreenState extends State<RegisterLoginScreen> {
                     space,
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.5,
-                      height: MediaQuery.of(context).size.height * 0.4,
+                      height: MediaQuery.of(context).size.height * 0.7,
                       child: Form(
                         key: _formKey,
                         child: SingleChildScrollView(
@@ -150,7 +150,7 @@ class _RegisterLoginScreenState extends State<RegisterLoginScreen> {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.8,
                                 height:
-                                    MediaQuery.of(context).size.height * 0.04,
+                                    MediaQuery.of(context).size.height * 0.05,
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
@@ -194,7 +194,7 @@ class _RegisterLoginScreenState extends State<RegisterLoginScreen> {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.8,
                                 height:
-                                    MediaQuery.of(context).size.height * 0.04,
+                                    MediaQuery.of(context).size.height * 0.05,
                                 child: ElevatedButton(
                                   onPressed: () => toggleView(),
                                   style: kButtonStyle,

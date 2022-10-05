@@ -336,10 +336,10 @@ class _EditBookingFormState extends State<EditBookingForm> {
 class ContactForm extends StatefulWidget {
   const ContactForm({
     Key? key,
-    required this.user,
+    required this.uid,
   }) : super(key: key);
 
-  final MyUserData user;
+  final String uid;
 
   @override
   State<ContactForm> createState() => _ContactFormState();
@@ -354,80 +354,128 @@ class _ContactFormState extends State<ContactForm> {
   final val = Validator();
 
   @override
+  void dispose() {
+    enquiryController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String name = widget.user.name;
-    String email = widget.user.email;
-    String number = widget.user.number;
     String enquiry = "";
 
-    TextEditingController nameController = TextEditingController(text: name);
-    TextEditingController emailController = TextEditingController(text: email);
-    TextEditingController numberController =
-        TextEditingController(text: number);
+    return StreamBuilder<MyUserData>(
+        stream: DatabaseService(widget.uid).user,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            var userData = snapshot.data!;
 
-    return Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-//SERVICE NAME
+            TextEditingController nameController =
+                TextEditingController(text: userData.name);
+            TextEditingController emailController =
+                TextEditingController(text: userData.email);
+            TextEditingController numberController =
+                TextEditingController(text: userData.number);
+            return Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    RoundTextField(
+                        controller: nameController,
+                        title: "Name",
+                        hinttext: userData.name,
+                        onSaved: (String? value) {
+                          userData.name != value;
+                        },
+                        validator: val.nameVal),
+                    space,
+                    RoundTextField(
+                        controller: emailController,
+                        title: "Email",
+                        hinttext: userData.email,
+                        onSaved: (String? value) {
+                          userData.email != value;
+                        },
+                        validator: val.emailVal),
+                    space,
+                    RoundTextField(
+                        controller: numberController,
+                        title: "Number",
+                        hinttext: userData.number,
+                        onSaved: (String? value) {
+                          userData.number != value;
+                        },
+                        validator: val.phoneVal),
+                    space,
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: TextFormField(
+                        maxLines: 20,
+                        decoration: InputDecoration(
+                          hintText: "Insert Enquiry Here",
+                          contentPadding: const EdgeInsets.all(15),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          labelText: "Enquiry",
+                        ),
+                        //initialValue: hinttext,
+                        onSaved: (String? value) {
+                          enquiry != value;
+                        },
+                        controller: enquiryController,
+                        validator: val.nameVal,
+                      ),
+                    ),
+                    space,
+                    //save button
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          var enquire = enquiryController.text;
+                          if (_formKey.currentState!.validate()) {
+                            await DatabaseService(widget.uid).addEnquiry(
+                                userData.name,
+                                userData.email,
+                                userData.number,
+                                enquiryController.text);
+                            showDialog(
+                                context: context,
+                                builder: ((context) => AlertDialog(
+                                      title:
+                                          const Text("You added an enquiry!"),
+                                      content: Text(
+                                          "Name: ${userData.name} \n Enquiry: $enquire "),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text("Close"))
+                                      ],
+                                    )));
 
-//BOOKING NAME
+                            enquiryController.clear(); 
+                          }
 
-            RoundTextField(
-                controller: nameController,
-                title: "Name",
-                hinttext: widget.user.name,
-                onSaved: (String? value) {
-                  name != value;
-                },
-                validator: val.nameVal),
-            space,
-            RoundTextField(
-                controller: emailController,
-                title: "Email",
-                hinttext: widget.user.email,
-                onSaved: (String? value) {
-                  email != value;
-                },
-                validator: val.emailVal),
-            space,
-            RoundTextField(
-                controller: numberController,
-                title: "Number",
-                hinttext: widget.user.number,
-                onSaved: (String? value) {
-                  number != value;
-                },
-                validator: val.phoneVal),
-            space,
-            RoundTextField(
-                controller: enquiryController,
-                title: "Enquiry",
-                hinttext: enquiry,
-                onSaved: (String? value) {
-                  enquiry != value;
-                },
-                validator: val.phoneVal),
-            space,
-            //save button
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.1,
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {}
-                },
-                style: kButtonStyle,
-                child: const Text(
-                  'Submit',
-                  style: kButtonTextStyle,
+                          //TODO! Update Enquiry Form
+                        },
+                        style: kButtonStyle,
+                        child: const Text(
+                          'Submit',
+                          style: kButtonTextStyle,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            );
+          }
+          return const Center(child: CircularProgressIndicator());
+        });
   }
 }
