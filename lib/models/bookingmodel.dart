@@ -13,7 +13,7 @@ class BookingData {
     required this.serviceId,
     required this.servicename,
     required this.date,
-    required this.time, 
+    required this.time,
   });
 }
 
@@ -24,11 +24,13 @@ class AppointmentData {
   final String servicename;
   final Timestamp date;
   final String report;
+  final String file;
   //final String attachment;
   AppointmentData({
     required this.aptId,
     required this.servicename,
     required this.date,
     required this.report,
+    required this.file, 
   });
 }

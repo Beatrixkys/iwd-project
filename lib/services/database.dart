@@ -65,6 +65,7 @@ class DatabaseService {
       'servicename': servicename,
       'date': date,
       'report': "No Report Yet",
+      'file': "",
     });
   }
 
@@ -76,6 +77,17 @@ class DatabaseService {
         .doc(aptid)
         .update({
       'report': report,
+    });
+  }
+
+  Future<void> uploadFile(String file, String aptid) async {
+    //doc will create a new uid of Database service
+    return await bookingCollection
+        .doc(uid)
+        .collection('aptdetails')
+        .doc(aptid)
+        .update({
+      'file': file,
     });
   }
 
@@ -139,6 +151,7 @@ class DatabaseService {
         date: (doc.data() as dynamic)['date'] ?? Timestamp.now(),
         servicename: (doc.data() as dynamic)['servicename'] ?? '',
         report: (doc.data() as dynamic)['report'] ?? '',
+        file: (doc.data() as dynamic)['file'] ?? '',
       );
     }).toList();
   }

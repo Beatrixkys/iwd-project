@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:website_wireframe/components/card.dart';
 
 import '../components/buttons.dart';
@@ -96,7 +97,11 @@ class _ContactScreenState extends State<ContactScreen> {
                 child: Row(
                   children: [
                     FloatingActionButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Uri url = Uri.parse(
+                            'https://www.facebook.com/subangjayamedicalcentre/');
+                        _launchUrl(url);
+                      },
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                       child: Icon(
                         Icons.link,
@@ -105,7 +110,10 @@ class _ContactScreenState extends State<ContactScreen> {
                     ),
                     const Spacer(),
                     FloatingActionButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Uri url = Uri.parse('tel:+60182618027');
+                          _launchUrl(url);
+                        },
                         backgroundColor:
                             Theme.of(context).colorScheme.secondary,
                         child: Icon(
@@ -114,7 +122,10 @@ class _ContactScreenState extends State<ContactScreen> {
                         )),
                     const Spacer(),
                     FloatingActionButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Uri url = Uri.parse('mailto:hospital@mail.com');
+                        _launchUrl(url);
+                      },
                       backgroundColor: Theme.of(context).colorScheme.secondary,
                       child: Icon(
                         Icons.local_post_office,
@@ -132,6 +143,10 @@ class _ContactScreenState extends State<ContactScreen> {
           //Footer
 
           ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.chat_bubble),
+      ),
     );
   }
 
@@ -154,5 +169,11 @@ class _ContactScreenState extends State<ContactScreen> {
     });
 
     return markers;
+  }
+}
+
+Future<void> _launchUrl(Uri url) async {
+  if (!await launchUrl(url)) {
+    throw 'Could not launch $url';
   }
 }

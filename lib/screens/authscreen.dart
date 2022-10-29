@@ -88,7 +88,7 @@ class _RegisterLoginScreenState extends State<RegisterLoginScreen> {
                       size: MediaQuery.of(context).size.height * 0.1,
                     ),
                     Text(
-                      showSignIn ? "Register" : "Login",
+                      showSignIn ? "Login" : "Register",
                       style: TextStyle(
                         fontSize: 40,
                         decoration: TextDecoration.none,
@@ -199,7 +199,7 @@ class _RegisterLoginScreenState extends State<RegisterLoginScreen> {
                                   onPressed: () => toggleView(),
                                   style: kButtonStyle,
                                   child: Text(
-                                    showSignIn ? 'Log In' : 'Register',
+                                    showSignIn ? 'Register' : 'Log In',
                                     style: kButtonTextStyle,
                                   ),
                                 ),

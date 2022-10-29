@@ -7,6 +7,7 @@ import 'package:website_wireframe/components/drawer.dart';
 import 'package:website_wireframe/constant.dart';
 
 import '../components/buttons.dart';
+import '../components/footer.dart';
 import '../listbuilders/service_list.dart';
 import '../models/servicemodel.dart';
 import '../services/database.dart';
@@ -32,21 +33,28 @@ class HomeScreen extends StatelessWidget {
       'Check Appointment Histories'
     ];
 
+    final List<String> routes = ['/', '/services', '/form'];
+
     final List<Widget> imageSliders = imgList
         .map((item) => ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-            child: Stack(
-              children: <Widget>[
-                Image.network(item,
-                    fit: BoxFit.cover,
-                    width: MediaQuery.of(context).size.width),
-                Center(
-                  child: Text(
-                    imgTitle[imgList.indexOf(item)],
-                    style: kTitleCardTextStyle,
+            child: InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, routes[imgList.indexOf(item)]);
+              },
+              child: Stack(
+                children: <Widget>[
+                  Image.network(item,
+                      fit: BoxFit.cover,
+                      width: MediaQuery.of(context).size.width),
+                  Center(
+                    child: Text(
+                      imgTitle[imgList.indexOf(item)],
+                      style: kTitleCardTextStyle,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )))
         .toList();
 
@@ -79,15 +87,68 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   space,
+                  Container(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    padding: const EdgeInsets.all(20),
+                    child: const Center(
+                        child: Text(
+                      "Experiencing Symptoms? \n \nNeed A General Check?",
+                      style: kTitleTextStyle,
+                    )),
+                  ),
+
                   const TitleBtnCard(),
                   SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.28,
+                      height: MediaQuery.of(context).size.height * 0.4,
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: ServiceList(uid: uid)),
                   //Big Card navigation List
                   //About Us Column
+
+                  Container(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    margin: const EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          height: MediaQuery.of(context).size.height,
+                          child: Image.asset(
+                            "hospital2.jpg",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: const [
+                              Text(
+                                "About Us",
+                                style: TextStyle(
+                                  fontSize: 40.0,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Nunito',
+                                ),
+                              ),
+                              space,
+                              Text(
+                                "Lorem ipsum dolor sit amet,",
+                                style: kSubTextStyle,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   //Categorical Service List
                   //Footer
+
+                  const Footer(),
                 ],
               ),
             ),

@@ -7,6 +7,7 @@ import 'package:website_wireframe/services/database.dart';
 
 import '../components/buttons.dart';
 import '../components/drawer.dart';
+import '../components/footer.dart';
 import '../components/header.dart';
 
 class ServiceScreen extends StatelessWidget {
@@ -49,9 +50,15 @@ class ServiceScreen extends StatelessWidget {
                     uid: uid,
                   )),
 
+                  const Footer(),
+
               //Footer
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.chat_bubble),
         ),
       ),
     );

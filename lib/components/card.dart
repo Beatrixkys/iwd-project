@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:website_wireframe/constant.dart';
 import 'package:website_wireframe/models/bookingmodel.dart';
 import 'package:website_wireframe/services/database.dart';
@@ -266,6 +267,21 @@ class AptHistoryCard extends StatelessWidget {
                 apt.report,
                 style: kSubTextStyle,
               ),
+              const Divider(),
+              const Text(
+                "Attachments:",
+                style: kHeadingTextStyle,
+              ),
+              if (apt.file == '')
+                const Text('No Files Attached', style: kSubTextStyle),
+              if (apt.file != '')
+                TextButton(
+                    onPressed: () {
+                      Uri url = Uri.parse(apt.file);
+                      _launchUrl(url);
+                    },
+                    child:
+                        const Text("Click to Download", style: kSubTextStyle)),
             ],
           ),
         ),
@@ -355,12 +371,25 @@ class AptHistoryCard extends StatelessWidget {
                   child: const Icon(Icons.edit),
                 ),
                 FloatingActionButton(
-                  onPressed: () {},
-                  child: const Icon(Icons.download),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: ((context) => UploadPopUp(
+                              apt: apt,
+                              uid: uid,
+                            )));
+                  },
+                  child: const Icon(Icons.upload),
                 ),
               ],
             ))
       ]),
     );
+  }
+}
+
+Future<void> _launchUrl(Uri url) async {
+  if (!await launchUrl(url)) {
+    throw 'Could not launch $url';
   }
 }

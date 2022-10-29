@@ -7,6 +7,7 @@ import 'package:website_wireframe/services/database.dart';
 
 import '../components/buttons.dart';
 import '../components/drawer.dart';
+import '../components/footer.dart';
 import '../components/header.dart';
 import '../models/bookingmodel.dart';
 
@@ -57,8 +58,13 @@ class AptScreen extends StatelessWidget {
                   child: AptHistoryList(
                     uid: uid,
                   )),
+                  const Footer(),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.chat_bubble),
         ),
       ),
     );
